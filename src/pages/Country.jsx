@@ -1,6 +1,6 @@
-import { Container, CountryInfo, Heading, Loader, Section } from 'components';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Container, CountryInfo, GoBackBtn, Heading, Loader, Section } from 'components';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import { fetchCountry } from 'service/countryApi';
 
 const Country = () => {
@@ -8,7 +8,9 @@ const Country = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { countryId } = useParams();
-
+  const location = useLocation();
+  const goBack = useRef(location?.state ?? "/");
+  console.log(location);
   useEffect(() => {
     const gatData = async () => {
       try {
@@ -28,6 +30,7 @@ const Country = () => {
   return (
     <Section>
       <Container>
+        <GoBackBtn path={goBack.current}>Back to countries</GoBackBtn>
         {loading && <Loader />}
         {error && <Heading title="Something went wrong" bottom />}
         {country && <CountryInfo {...country} />}
